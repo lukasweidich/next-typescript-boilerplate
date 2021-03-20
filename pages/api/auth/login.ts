@@ -35,12 +35,12 @@ export default async (req, res) => {
                 }
             } catch (error) {
                 res.statusCode = 401;
-                res.send(error.message)
+                res.send(error.message);
             }
             break;
         default:
             res.setHeader("Allow", ["POST"]);
-            res.status(405).send(`Method ${method} Not Allowed`)
+            res.status(405).send(`Method ${method} Not Allowed`);
             break;
     }
 };

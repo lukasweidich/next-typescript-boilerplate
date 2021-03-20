@@ -1,20 +1,20 @@
 import User, { UserInterface } from "../db/types/User";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
+import { doesUserMeetAllRequirements } from "./misc";
 require("dotenv").config();
 
-type BearerToken = string
-type UserRequirementFunction = (user?: UserInterface) => Promise<boolean>
+export type UserRequirementFunction = (user?: UserInterface) => Promise<boolean>
 
 interface UserIdAndBearerTokenInterface {
     id: string
-    token: BearerToken
+    token: string
 }
 
 interface ValidateBearerTokenInterface {
     user?: UserInterface
     isValid: boolean
-    token?: BearerToken
+    token?: string
 }
 
 export const executeIfUserRequirementsMet = async (
@@ -24,13 +24,7 @@ export const executeIfUserRequirementsMet = async (
     res: NextApiResponse,
     fn = async () => null
 ): Promise<void> => {
-    const getFulfilledRequirements = async () => {
-        return Promise.all(
-            userRequirements.map((requirement) => requirement(user))
-        );
-    };
-    const fulfilledRequirements = await getFulfilledRequirements();
-    const allRequirementsMet = fulfilledRequirements.every((fulfilledRequirement) => fulfilledRequirement);
+    const allRequirementsMet = doesUserMeetAllRequirements(user, userRequirements)
     if (allRequirementsMet) {
         await fn();
     } else {
@@ -43,7 +37,7 @@ export const executeIfUserRequirementsMet = async (
 export const continueIfAuthenticatedWithBearerToken = async (
     authorization: string,
     res: NextApiResponse,
-    fn = async (user: UserInterface, token: BearerToken) => null
+    fn = async (user: UserInterface, token: string) => null
 ): Promise<void> => {
     if (authorization && authorization.startsWith("Bearer")) {
         const { user, token, isValid } = await validateBearerToken(authorization);
