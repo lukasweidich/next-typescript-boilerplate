@@ -1,0 +1,1 @@
+export const isEqual = (a: string | number, b: string | number): boolean => String(a).localeCompare(String(b)) === 0;
