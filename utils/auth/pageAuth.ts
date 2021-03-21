@@ -19,7 +19,7 @@ export const protectRoute = (
 		req,
 	);
 
-	const allRequirementsMet = doesUserMeetAllRequirements(
+	const allRequirementsMet = await doesUserMeetAllRequirements(
 		user,
 		userRequirements,
 	);
