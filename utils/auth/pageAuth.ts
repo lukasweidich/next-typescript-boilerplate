@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import User, { UserInterface } from "../db/types/User";
-import { connect } from "./db";
+import User, { UserInterface } from "../../db/types/User";
+import { connect } from "../db";
 import { UserRequirementFunction } from "./apiAuth";
-import { InitialAuthReducerStateInterface } from "./../reducers/authReducer";
-import { doesUserMeetAllRequirements } from "./misc";
+import { InitialAuthReducerStateInterface } from "./../../reducers/authReducer";
+import { doesUserMeetAllRequirements } from "../misc";
 require("dotenv").config();
 connect();
 
@@ -19,6 +19,11 @@ export const protectRoute = (
 		req,
 	);
 
+	const allRequirementsMet = doesUserMeetAllRequirements(
+		user,
+		userRequirements,
+	);
+
 	if (!token) {
 		return {
 			redirect: {
@@ -30,18 +35,15 @@ export const protectRoute = (
 				statusCode: 302,
 			},
 		};
-	} else if (
-		userRequirements.length > 0 &&
-		(await doesUserMeetAllRequirements(user, userRequirements))
-	) {
+	} else if (allRequirementsMet) {
+		return fn(user, token);
+	} else {
 		return {
 			redirect: {
 				destination: `/`,
 				statusCode: 302,
 			},
 		};
-	} else {
-		return fn(user, token);
 	}
 };
 
@@ -57,7 +59,7 @@ const getTokenAndUserInfoFromRequest = async (
 		cookies: { token },
 	} = request;
 	if (token) {
-		const sanitizedToken: string = removeQuotesFromToken(token);
+		const sanitizedToken: string = removeDoubleQuotesFromToken(token);
 		try {
 			const decoded = jwt.verify(
 				String(sanitizedToken),
@@ -79,6 +81,6 @@ const getTokenAndUserInfoFromRequest = async (
 	}
 };
 
-const removeQuotesFromToken = (token: string): string => {
+const removeDoubleQuotesFromToken = (token: string): string => {
 	return String(token).replace(/"/g, "");
 };

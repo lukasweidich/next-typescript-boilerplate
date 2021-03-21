@@ -3,7 +3,7 @@ import User, { UserInterface } from "../../../db/types/User";
 import {
 	continueIfAuthenticatedWithBearerToken,
 	executeIfUserRequirementsMet,
-} from "../../../utils/apiAuth";
+} from "../../../utils/auth/apiAuth";
 import { connect } from "../../../utils/db";
 import { isEqual } from "../../../utils/misc";
 connect();

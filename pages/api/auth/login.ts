@@ -1,5 +1,5 @@
 import User, { UserInterface } from "../../../db/types/User";
-import generateToken from "../../../utils/generateToken";
+import generateToken from "../../../utils/auth/generateToken";
 import { connect } from "../../../utils/db";
 connect();
 

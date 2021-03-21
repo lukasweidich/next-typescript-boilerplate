@@ -8,17 +8,12 @@ export const getServerSideProps = protectRoute(
 			props: { user: JSON.stringify(user), token },
 		};
 	},
-	[],
+	[(user) => user.isAdmin],
 );
 
-const secret = ({ user: userString, token }) => {
+const admin = ({ user: userString, token }) => {
 	const user: UserInterface = JSON.parse(userString);
-	return (
-		<>
-			<h3>Good to see you, {user.firstName}!</h3>
-			<p>This route can only be accessed when logged in.</p>
-		</>
-	);
+	return <div>Congratulations, {user.firstName}: you are an admin.</div>;
 };
 
-export default secret;
+export default admin;

@@ -1,12 +1,12 @@
-import User, { UserInterface } from "../db/types/User";
+import User, { UserInterface } from "../../db/types/User";
 import jwt from "jsonwebtoken";
 import { NextApiRequest, NextApiResponse } from "next";
-import { doesUserMeetAllRequirements } from "./misc";
+import { doesUserMeetAllRequirements } from "../misc";
 require("dotenv").config();
 
 export type UserRequirementFunction = (
 	user?: UserInterface,
-) => Promise<boolean>;
+) => Promise<boolean> | boolean;
 
 interface UserIdAndBearerTokenInterface {
 	id: string;

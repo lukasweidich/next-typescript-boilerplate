@@ -3,7 +3,7 @@ import User, { UserInterface } from "../../../db/types/User";
 import {
 	continueIfAuthenticatedWithBearerToken,
 	executeIfUserRequirementsMet,
-} from "../../../utils/apiAuth";
+} from "../../../utils/auth/apiAuth";
 import { connect } from "../../../utils/db";
 connect();
 
@@ -42,9 +42,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 			break;
 
 		case "POST":
+			/**
+			 * do not allow anyone to set isAdmin via request
+			 */
 			const {
-				body: { user },
+				body: {
+					user: { isAdmin, ...user },
+				},
+			}: {
+				body: {
+					user: UserInterface;
+				};
 			} = req;
+
 			try {
 				const createdUser: UserInterface = await User.create({ ...user });
 				res.statusCode = 201;

@@ -34,6 +34,9 @@ const login = () => {
 					<Link href="/secret">
 						<a>To protected route</a>
 					</Link>
+					<Link href="/admin">
+						<a>To admin route</a>
+					</Link>
 				</>
 			) : (
 				<form onSubmit={handleLogIn}>

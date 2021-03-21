@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { EXPIRY_IN_DAYS } from "./constants";
+import { EXPIRY_IN_DAYS } from "../constants";
 require("dotenv").config();
 
 const generateToken = (id: string): string => {
